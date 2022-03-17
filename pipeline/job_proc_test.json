@@ -1,0 +1,39 @@
+{
+	"name": "job_proc_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "job_proc_test",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[ods].[sp_ods]",
+					"storedProcedureParameters": {
+						"run_date": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "Datetime"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "POC",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-02-24T07:41:20Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

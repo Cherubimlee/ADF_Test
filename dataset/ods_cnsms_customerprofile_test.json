@@ -1,0 +1,168 @@
+{
+	"name": "ods_cnsms_customerprofile_test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "POC",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "lk_to_ods"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "customerprofileid",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "customerid",
+				"type": "char"
+			},
+			{
+				"name": "custtype",
+				"type": "char"
+			},
+			{
+				"name": "storeid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "custcategorytype",
+				"type": "char"
+			},
+			{
+				"name": "namecn",
+				"type": "nvarchar"
+			},
+			{
+				"name": "nameen",
+				"type": "varchar"
+			},
+			{
+				"name": "birthdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "gender",
+				"type": "char"
+			},
+			{
+				"name": "isactiveind",
+				"type": "bit"
+			},
+			{
+				"name": "spousenamecn",
+				"type": "nvarchar"
+			},
+			{
+				"name": "spousenameen",
+				"type": "varchar"
+			},
+			{
+				"name": "contactbyemail",
+				"type": "bit"
+			},
+			{
+				"name": "referralid",
+				"type": "char"
+			},
+			{
+				"name": "applicationnumber",
+				"type": "char"
+			},
+			{
+				"name": "applicationdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "renewdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "creditlimit",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "supqualdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "suprequaldate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "cntryprocess",
+				"type": "char"
+			},
+			{
+				"name": "pcappdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "dsappdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "updatecount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "createdon",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "createdby",
+				"type": "varchar"
+			},
+			{
+				"name": "updatedon",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "updatedby",
+				"type": "varchar"
+			},
+			{
+				"name": "isdeleted",
+				"type": "bit"
+			},
+			{
+				"name": "spousenationalid",
+				"type": "char"
+			},
+			{
+				"name": "customerprofilets",
+				"type": "timestamp"
+			}
+		],
+		"typeProperties": {
+			"schema": "ods",
+			"table": "cnsms_customerprofile_test"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

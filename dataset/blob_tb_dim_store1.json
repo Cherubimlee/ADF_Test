@@ -1,0 +1,22 @@
+{
+	"name": "blob_tb_dim_store1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "target"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "Targ_File",
+				"container": "datablob"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

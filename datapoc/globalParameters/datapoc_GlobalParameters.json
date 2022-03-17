@@ -1,0 +1,14 @@
+{
+	"CNSMS": {
+		"type": "string",
+		"value": "CNSMS"
+	},
+	"WLC": {
+		"type": "string",
+		"value": "WLC"
+	},
+	"HRP": {
+		"type": "string",
+		"value": "HRP"
+	}
+}

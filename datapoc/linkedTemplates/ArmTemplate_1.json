@@ -1,0 +1,2710 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "datapoc"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dl_source_raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"prefix_path": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "lz_to_lk/source"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().prefix_path,'/', formatDateTime(utcnow(), 'yyyy'),'/',formatDateTime(utcnow(), 'MM'),'/',formatDateTime(utcnow(), 'dd'))",
+							"type": "Expression"
+						},
+						"container": "datablob"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "customerprofileid",
+						"type": "String"
+					},
+					{
+						"name": "customerid",
+						"type": "String"
+					},
+					{
+						"name": "custtype",
+						"type": "String"
+					},
+					{
+						"name": "storeid",
+						"type": "String"
+					},
+					{
+						"name": "custcategorytype",
+						"type": "String"
+					},
+					{
+						"name": "namecn",
+						"type": "String"
+					},
+					{
+						"name": "nameen",
+						"type": "String"
+					},
+					{
+						"name": "birthdate",
+						"type": "String"
+					},
+					{
+						"name": "gender",
+						"type": "String"
+					},
+					{
+						"name": "isactiveind",
+						"type": "String"
+					},
+					{
+						"name": "spousenamecn",
+						"type": "String"
+					},
+					{
+						"name": "spousenameen",
+						"type": "String"
+					},
+					{
+						"name": "contactbyemail",
+						"type": "String"
+					},
+					{
+						"name": "referralid",
+						"type": "String"
+					},
+					{
+						"name": "applicationnumber",
+						"type": "String"
+					},
+					{
+						"name": "applicationdate",
+						"type": "String"
+					},
+					{
+						"name": "renewdate",
+						"type": "String"
+					},
+					{
+						"name": "creditlimit",
+						"type": "String"
+					},
+					{
+						"name": "supqualdate",
+						"type": "String"
+					},
+					{
+						"name": "suprequaldate",
+						"type": "String"
+					},
+					{
+						"name": "cntryprocess",
+						"type": "String"
+					},
+					{
+						"name": "pcappdate",
+						"type": "String"
+					},
+					{
+						"name": "dsappdate",
+						"type": "String"
+					},
+					{
+						"name": "updatecount",
+						"type": "String"
+					},
+					{
+						"name": "createdon",
+						"type": "String"
+					},
+					{
+						"name": "createdby",
+						"type": "String"
+					},
+					{
+						"name": "updatedon",
+						"type": "String"
+					},
+					{
+						"name": "updatedby",
+						"type": "String"
+					},
+					{
+						"name": "isdeleted",
+						"type": "String"
+					},
+					{
+						"name": "spousenationalid",
+						"type": "String"
+					},
+					{
+						"name": "customerprofilets",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dm_employee')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "POC",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "dws_to_dm"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "employee_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "employee_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "age",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "salary",
+						"type": "decimal",
+						"precision": 20,
+						"scale": 2
+					},
+					{
+						"name": "hire_day",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "memo",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dm",
+					"table": "dm_t_employee"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dws_employee')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "POC",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "dws_to_dm"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "employee_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "employee_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "age",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "salary",
+						"type": "decimal",
+						"precision": 20,
+						"scale": 2
+					},
+					{
+						"name": "hire_day",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "memo",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "t_employee"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/lk_source_parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"prefix_path": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "lk_to_ods"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().prefix_path",
+							"type": "Expression"
+						},
+						"container": "datablob"
+					},
+					"compressionCodec": "none"
+				},
+				"schema": [
+					{
+						"name": "customerprofileid",
+						"type": "UTF8"
+					},
+					{
+						"name": "customerid",
+						"type": "UTF8"
+					},
+					{
+						"name": "custtype",
+						"type": "UTF8"
+					},
+					{
+						"name": "storeid",
+						"type": "UTF8"
+					},
+					{
+						"name": "custcategorytype",
+						"type": "UTF8"
+					},
+					{
+						"name": "namecn",
+						"type": "UTF8"
+					},
+					{
+						"name": "nameen",
+						"type": "UTF8"
+					},
+					{
+						"name": "birthdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "gender",
+						"type": "UTF8"
+					},
+					{
+						"name": "isactiveind",
+						"type": "UTF8"
+					},
+					{
+						"name": "spousenamecn",
+						"type": "UTF8"
+					},
+					{
+						"name": "spousenameen",
+						"type": "UTF8"
+					},
+					{
+						"name": "contactbyemail",
+						"type": "UTF8"
+					},
+					{
+						"name": "referralid",
+						"type": "UTF8"
+					},
+					{
+						"name": "applicationnumber",
+						"type": "UTF8"
+					},
+					{
+						"name": "applicationdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "renewdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "creditlimit",
+						"type": "UTF8"
+					},
+					{
+						"name": "supqualdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "suprequaldate",
+						"type": "UTF8"
+					},
+					{
+						"name": "cntryprocess",
+						"type": "UTF8"
+					},
+					{
+						"name": "pcappdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "dsappdate",
+						"type": "UTF8"
+					},
+					{
+						"name": "updatecount",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdon",
+						"type": "UTF8"
+					},
+					{
+						"name": "createdby",
+						"type": "UTF8"
+					},
+					{
+						"name": "updatedon",
+						"type": "UTF8"
+					},
+					{
+						"name": "updatedby",
+						"type": "UTF8"
+					},
+					{
+						"name": "isdeleted",
+						"type": "UTF8"
+					},
+					{
+						"name": "spousenationalid",
+						"type": "UTF8"
+					},
+					{
+						"name": "customerprofilets",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/lz_source_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"db_code": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "lz_to_lk/source"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat('Landing Zone/',dataset().db_code)",
+							"type": "Expression"
+						},
+						"container": "datablob"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "customerprofileid",
+						"type": "String"
+					},
+					{
+						"name": "customerid",
+						"type": "String"
+					},
+					{
+						"name": "custtype",
+						"type": "String"
+					},
+					{
+						"name": "storeid",
+						"type": "String"
+					},
+					{
+						"name": "custcategorytype",
+						"type": "String"
+					},
+					{
+						"name": "namecn",
+						"type": "String"
+					},
+					{
+						"name": "nameen",
+						"type": "String"
+					},
+					{
+						"name": "birthdate",
+						"type": "String"
+					},
+					{
+						"name": "gender",
+						"type": "String"
+					},
+					{
+						"name": "isactiveind",
+						"type": "String"
+					},
+					{
+						"name": "spousenamecn",
+						"type": "String"
+					},
+					{
+						"name": "spousenameen",
+						"type": "String"
+					},
+					{
+						"name": "contactbyemail",
+						"type": "String"
+					},
+					{
+						"name": "referralid",
+						"type": "String"
+					},
+					{
+						"name": "applicationnumber",
+						"type": "String"
+					},
+					{
+						"name": "applicationdate",
+						"type": "String"
+					},
+					{
+						"name": "renewdate",
+						"type": "String"
+					},
+					{
+						"name": "creditlimit",
+						"type": "String"
+					},
+					{
+						"name": "supqualdate",
+						"type": "String"
+					},
+					{
+						"name": "suprequaldate",
+						"type": "String"
+					},
+					{
+						"name": "cntryprocess",
+						"type": "String"
+					},
+					{
+						"name": "pcappdate",
+						"type": "String"
+					},
+					{
+						"name": "dsappdate",
+						"type": "String"
+					},
+					{
+						"name": "updatecount",
+						"type": "String"
+					},
+					{
+						"name": "createdon",
+						"type": "String"
+					},
+					{
+						"name": "createdby",
+						"type": "String"
+					},
+					{
+						"name": "updatedon",
+						"type": "String"
+					},
+					{
+						"name": "updatedby",
+						"type": "String"
+					},
+					{
+						"name": "isdeleted",
+						"type": "String"
+					},
+					{
+						"name": "spousenationalid",
+						"type": "String"
+					},
+					{
+						"name": "customerprofilets",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ods_cnsms_customerprofile_test')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "POC",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "lk_to_ods"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "customerprofileid",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "customerid",
+						"type": "char"
+					},
+					{
+						"name": "custtype",
+						"type": "char"
+					},
+					{
+						"name": "storeid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "custcategorytype",
+						"type": "char"
+					},
+					{
+						"name": "namecn",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nameen",
+						"type": "varchar"
+					},
+					{
+						"name": "birthdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "gender",
+						"type": "char"
+					},
+					{
+						"name": "isactiveind",
+						"type": "bit"
+					},
+					{
+						"name": "spousenamecn",
+						"type": "nvarchar"
+					},
+					{
+						"name": "spousenameen",
+						"type": "varchar"
+					},
+					{
+						"name": "contactbyemail",
+						"type": "bit"
+					},
+					{
+						"name": "referralid",
+						"type": "char"
+					},
+					{
+						"name": "applicationnumber",
+						"type": "char"
+					},
+					{
+						"name": "applicationdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "renewdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "creditlimit",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "supqualdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "suprequaldate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "cntryprocess",
+						"type": "char"
+					},
+					{
+						"name": "pcappdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "dsappdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "updatecount",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "createdon",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "createdby",
+						"type": "varchar"
+					},
+					{
+						"name": "updatedon",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "updatedby",
+						"type": "varchar"
+					},
+					{
+						"name": "isdeleted",
+						"type": "bit"
+					},
+					{
+						"name": "spousenationalid",
+						"type": "char"
+					},
+					{
+						"name": "customerprofilets",
+						"type": "timestamp"
+					}
+				],
+				"typeProperties": {
+					"schema": "ods",
+					"table": "cnsms_customerprofile_test"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ods_employee')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "POC",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "lk_to_ods"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "customerprofileid",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "customerid",
+						"type": "char"
+					},
+					{
+						"name": "custtype",
+						"type": "char"
+					},
+					{
+						"name": "storeid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "custcategorytype",
+						"type": "char"
+					},
+					{
+						"name": "namecn",
+						"type": "nvarchar"
+					},
+					{
+						"name": "nameen",
+						"type": "varchar"
+					},
+					{
+						"name": "birthdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "gender",
+						"type": "char"
+					},
+					{
+						"name": "isactiveind",
+						"type": "bit"
+					},
+					{
+						"name": "spousenamecn",
+						"type": "nvarchar"
+					},
+					{
+						"name": "spousenameen",
+						"type": "varchar"
+					},
+					{
+						"name": "contactbyemail",
+						"type": "bit"
+					},
+					{
+						"name": "referralid",
+						"type": "char"
+					},
+					{
+						"name": "applicationnumber",
+						"type": "char"
+					},
+					{
+						"name": "applicationdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "renewdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "creditlimit",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 2
+					},
+					{
+						"name": "supqualdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "suprequaldate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "cntryprocess",
+						"type": "char"
+					},
+					{
+						"name": "pcappdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "dsappdate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "updatecount",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "createdon",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "createdby",
+						"type": "varchar"
+					},
+					{
+						"name": "updatedon",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "updatedby",
+						"type": "varchar"
+					},
+					{
+						"name": "isdeleted",
+						"type": "bit"
+					},
+					{
+						"name": "spousenationalid",
+						"type": "char"
+					},
+					{
+						"name": "customerprofilets",
+						"type": "timestamp"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "t_employee"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pq_tb_dim_store')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "parquet"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "parquet",
+						"container": "datablob"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SYNC_DIM_DATE1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_xyi",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "datablob/Sour_File/DIM_DATE.csv"
+							},
+							{
+								"name": "Destination",
+								"value": "dwd.dw_wlc_dim_date"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 0
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink"
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "DATE_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "date_id",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DATE_STR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "date_str",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "YEAR_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "year_id",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "YEAR_STR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "year_str",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "QUARTER_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "quarter_id",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "QUARTER_STR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "quarter_str",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTH_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "month_id",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTH_STR",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "month_str",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISWEEKEND",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "isweekend",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISHOLIDAY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "isholiday",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISEVENT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "isevent",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "MONTH_EN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "month_en",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "WEEK_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "week_id",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "DAY_WEEK",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "day_week",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_xyi",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_xyi",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-24T06:24:16Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/copy_tb_dim_store')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "blob_tb_dim_store",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "blob_tb_dim_store1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-26T03:24:39Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/job_cnsms_lz_to_lk')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata_Cnsms",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "lz_source_csv",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"db_code": {
+										"value": "@pipeline().globalParameters.CNSMS",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata_Cnsms",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata_Cnsms').output.childItems",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data raw",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "lz_source_csv",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"db_code": {
+													"value": "@pipeline().globalParameters.CNSMS",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dl_sink_raw",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@concat('ods_', item().name)",
+													"type": "Expression"
+												},
+												"prefix_path": {
+													"value": "@concat('raw/',pipeline().globalParameters.CNSMS,'/BasicData')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Delete orginal data",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "Copy data prepare",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "Copy data archive",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "lz_source_csv",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"db_code": {
+													"value": "@pipeline().globalParameters.CNSMS",
+													"type": "Expression"
+												}
+											}
+										},
+										"logStorageSettings": {
+											"linkedServiceName": {
+												"referenceName": "AzureBlobStorage1",
+												"type": "LinkedServiceReference"
+											}
+										},
+										"enableLogging": true,
+										"storeSettings": {
+											"type": "AzureBlobStorageReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										}
+									}
+								},
+								{
+									"name": "Copy data prepare",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Copy data raw",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dl_source_raw",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@concat('ods_',item().name)",
+													"type": "Expression"
+												},
+												"prefix_path": {
+													"value": "@concat('raw/',pipeline().globalParameters.CNSMS,'/BasicData')",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dl_sink_prepare",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@concat('ods_',replace(item().name,'.csv' ,'.parquet' ))",
+													"type": "Expression"
+												},
+												"prefix_path": {
+													"value": "@concat('prepare/',pipeline().globalParameters.CNSMS,'/BasicData')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Copy data archive",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Copy data raw",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dl_source_raw",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@concat('ods_',item().name)",
+													"type": "Expression"
+												},
+												"prefix_path": {
+													"value": "@concat('raw/',pipeline().globalParameters.CNSMS,'/BasicData')",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dl_sink_archive",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@concat('ods_arc_',item().name)",
+													"type": "Expression"
+												},
+												"prefix_path": "archive",
+												"db_code": {
+													"value": "@pipeline().globalParameters.CNSMS",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"starttime": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "lz_to_lk"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-01T08:46:28Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/lz_source_csv')]",
+				"[concat(variables('factoryId'), '/datasets/dl_source_raw')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/job_cnsms_odsraw_ods_customerprofile')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_uu8",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "datablob/Landing Zone/CNSMS/CUSTOMERPROFILE.csv"
+							},
+							{
+								"name": "Destination",
+								"value": "ods.cnsms_customerprofile"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 0
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink"
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CUSTOMERPROFILEID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "customerprofileid",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "CUSTOMERID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "customerid",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "CUSTTYPE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "custtype",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "STOREID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "storeid",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "CUSTCATEGORYTYPE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "custcategorytype",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "NAMECN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "namecn",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "NAMEEN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "nameen",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BIRTHDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "birthdate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "GENDER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "gender",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "ISACTIVEIND",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "isactiveind",
+											"type": "Boolean",
+											"physicalType": "bit"
+										}
+									},
+									{
+										"source": {
+											"name": "SPOUSENAMECN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "spousenamecn",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SPOUSENAMEEN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "spousenameen",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "CONTACTBYEMAIL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "contactbyemail",
+											"type": "Boolean",
+											"physicalType": "bit"
+										}
+									},
+									{
+										"source": {
+											"name": "REFERRALID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "referralid",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "APPLICATIONNUMBER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "applicationnumber",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "APPLICATIONDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "applicationdate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "RENEWDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "renewdate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "CREDITLIMIT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "creditlimit",
+											"type": "Decimal",
+											"physicalType": "numeric"
+										}
+									},
+									{
+										"source": {
+											"name": "SUPQUALDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "supqualdate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "SUPREQUALDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "suprequaldate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "CNTRYPROCESS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cntryprocess",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "PCAPPDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "pcappdate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "DSAPPDATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "dsappdate",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "UPDATECOUNT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "updatecount",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "CREATEDON",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "createdon",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "CREATEDBY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "createdby",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UPDATEDON",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "updatedon",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "UPDATEDBY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "updatedby",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISDELETED",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "isdeleted",
+											"type": "Boolean",
+											"physicalType": "bit"
+										}
+									},
+									{
+										"source": {
+											"name": "SPOUSENATIONALID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "spousenationalid",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "CUSTOMERPROFILETS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "customerprofilets",
+											"type": "Byte[]",
+											"physicalType": "timestamp"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_uu8",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_uu8",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-24T02:54:00Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/job_dws_dm_emplyee')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"id"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "employee_id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										},
+										"sink": {
+											"name": "employee_id",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "employee_name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "employee_name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "age",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "age",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "salary",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										},
+										"sink": {
+											"name": "salary",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 2,
+											"precision": 20
+										}
+									},
+									{
+										"source": {
+											"name": "hire_day",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "hire_day",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "memo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "memo",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dws_employee",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dm_employee",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "dws_to_dm"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-28T03:26:42Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dws_employee')]",
+				"[concat(variables('factoryId'), '/datasets/dm_employee')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/job_ods_cnsms_customerprofile_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "lk_source_parquet",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "*",
+									"prefix_path": {
+										"value": "@concat('prepare/',pipeline().globalParameters.CNSMS,'/BasicData/', formatDateTime(utcnow(), 'yyyy'),'/',formatDateTime(utcnow(), 'MM'),'/',formatDateTime(utcnow(), 'dd'))",
+										"type": "Expression"
+									}
+								}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata1').output.childItems",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ParquetSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										},
+										"sink": {
+											"type": "SqlServerSink",
+											"writeBehavior": "upsert",
+											"upsertSettings": {
+												"useTempDB": true,
+												"keys": [
+													"id"
+												]
+											},
+											"sqlWriterUseTableLock": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "lk_source_parquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"filename": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"prefix_path": {
+													"value": "@concat('prepare/',pipeline().globalParameters.CNSMS,'/BasicData/', formatDateTime(utcnow(), 'yyyy'),'/',formatDateTime(utcnow(), 'MM'),'/',formatDateTime(utcnow(), 'dd'))",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ods_cnsms_customerprofile_test",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "lk_to_ods"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-25T10:48:10Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/lk_source_parquet')]",
+				"[concat(variables('factoryId'), '/datasets/ods_cnsms_customerprofile_test')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/job_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_crp",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "datablob/Landing Zone/CNSMS/"
+							},
+							{
+								"name": "Destination",
+								"value": "datablob/raw/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false,
+							"logSettings": {
+								"enableCopyActivityLog": true,
+								"copyActivityLogSettings": {
+									"logLevel": "Warning",
+									"enableReliableLogging": false
+								},
+								"logLocationSettings": {
+									"linkedServiceName": {
+										"referenceName": "AzureBlobStorage1",
+										"type": "LinkedServiceReference"
+									}
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_crp",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_crp",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-24T06:36:42Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServerTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-19T12:19:45Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"customerprofileid"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dl_source_raw",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": "ods_cnsms_customerprofile_20220225104944_full.csv",
+									"prefix_path": {
+										"value": "@concat('raw/',pipeline().globalParameters.CNSMS,'/BasicData')",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ods_cnsms_customerprofile_test",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "lk_to_ods"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-02-25T09:53:41Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dl_source_raw')]",
+				"[concat(variables('factoryId'), '/datasets/ods_cnsms_customerprofile_test')]"
+			]
+		}
+	]
+}

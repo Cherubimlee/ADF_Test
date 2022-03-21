@@ -1,0 +1,11 @@
+{
+	"name": "POC",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": ""
+		}
+	}
+}

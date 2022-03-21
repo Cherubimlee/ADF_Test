@@ -1,0 +1,164 @@
+{
+	"name": "lk_source_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			},
+			"prefix_path": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "lk_to_ods"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().prefix_path",
+					"type": "Expression"
+				},
+				"container": "datablob"
+			},
+			"compressionCodec": "none"
+		},
+		"schema": [
+			{
+				"name": "customerprofileid",
+				"type": "UTF8"
+			},
+			{
+				"name": "customerid",
+				"type": "UTF8"
+			},
+			{
+				"name": "custtype",
+				"type": "UTF8"
+			},
+			{
+				"name": "storeid",
+				"type": "UTF8"
+			},
+			{
+				"name": "custcategorytype",
+				"type": "UTF8"
+			},
+			{
+				"name": "namecn",
+				"type": "UTF8"
+			},
+			{
+				"name": "nameen",
+				"type": "UTF8"
+			},
+			{
+				"name": "birthdate",
+				"type": "UTF8"
+			},
+			{
+				"name": "gender",
+				"type": "UTF8"
+			},
+			{
+				"name": "isactiveind",
+				"type": "UTF8"
+			},
+			{
+				"name": "spousenamecn",
+				"type": "UTF8"
+			},
+			{
+				"name": "spousenameen",
+				"type": "UTF8"
+			},
+			{
+				"name": "contactbyemail",
+				"type": "UTF8"
+			},
+			{
+				"name": "referralid",
+				"type": "UTF8"
+			},
+			{
+				"name": "applicationnumber",
+				"type": "UTF8"
+			},
+			{
+				"name": "applicationdate",
+				"type": "UTF8"
+			},
+			{
+				"name": "renewdate",
+				"type": "UTF8"
+			},
+			{
+				"name": "creditlimit",
+				"type": "UTF8"
+			},
+			{
+				"name": "supqualdate",
+				"type": "UTF8"
+			},
+			{
+				"name": "suprequaldate",
+				"type": "UTF8"
+			},
+			{
+				"name": "cntryprocess",
+				"type": "UTF8"
+			},
+			{
+				"name": "pcappdate",
+				"type": "UTF8"
+			},
+			{
+				"name": "dsappdate",
+				"type": "UTF8"
+			},
+			{
+				"name": "updatecount",
+				"type": "UTF8"
+			},
+			{
+				"name": "createdon",
+				"type": "UTF8"
+			},
+			{
+				"name": "createdby",
+				"type": "UTF8"
+			},
+			{
+				"name": "updatedon",
+				"type": "UTF8"
+			},
+			{
+				"name": "updatedby",
+				"type": "UTF8"
+			},
+			{
+				"name": "isdeleted",
+				"type": "UTF8"
+			},
+			{
+				"name": "spousenationalid",
+				"type": "UTF8"
+			},
+			{
+				"name": "customerprofilets",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

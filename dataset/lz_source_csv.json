@@ -1,0 +1,167 @@
+{
+	"name": "lz_source_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			},
+			"db_code": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "lz_to_lk/source"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('Landing Zone/',dataset().db_code)",
+					"type": "Expression"
+				},
+				"container": "datablob"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "customerprofileid",
+				"type": "String"
+			},
+			{
+				"name": "customerid",
+				"type": "String"
+			},
+			{
+				"name": "custtype",
+				"type": "String"
+			},
+			{
+				"name": "storeid",
+				"type": "String"
+			},
+			{
+				"name": "custcategorytype",
+				"type": "String"
+			},
+			{
+				"name": "namecn",
+				"type": "String"
+			},
+			{
+				"name": "nameen",
+				"type": "String"
+			},
+			{
+				"name": "birthdate",
+				"type": "String"
+			},
+			{
+				"name": "gender",
+				"type": "String"
+			},
+			{
+				"name": "isactiveind",
+				"type": "String"
+			},
+			{
+				"name": "spousenamecn",
+				"type": "String"
+			},
+			{
+				"name": "spousenameen",
+				"type": "String"
+			},
+			{
+				"name": "contactbyemail",
+				"type": "String"
+			},
+			{
+				"name": "referralid",
+				"type": "String"
+			},
+			{
+				"name": "applicationnumber",
+				"type": "String"
+			},
+			{
+				"name": "applicationdate",
+				"type": "String"
+			},
+			{
+				"name": "renewdate",
+				"type": "String"
+			},
+			{
+				"name": "creditlimit",
+				"type": "String"
+			},
+			{
+				"name": "supqualdate",
+				"type": "String"
+			},
+			{
+				"name": "suprequaldate",
+				"type": "String"
+			},
+			{
+				"name": "cntryprocess",
+				"type": "String"
+			},
+			{
+				"name": "pcappdate",
+				"type": "String"
+			},
+			{
+				"name": "dsappdate",
+				"type": "String"
+			},
+			{
+				"name": "updatecount",
+				"type": "String"
+			},
+			{
+				"name": "createdon",
+				"type": "String"
+			},
+			{
+				"name": "createdby",
+				"type": "String"
+			},
+			{
+				"name": "updatedon",
+				"type": "String"
+			},
+			{
+				"name": "updatedby",
+				"type": "String"
+			},
+			{
+				"name": "isdeleted",
+				"type": "String"
+			},
+			{
+				"name": "spousenationalid",
+				"type": "String"
+			},
+			{
+				"name": "customerprofilets",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
